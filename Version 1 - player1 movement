@@ -1,0 +1,89 @@
+/**
+ * Project 3 versions 0-4 - 2D Web Game
+ * Name:Patrick Memong
+ * 
+ * Use this template to get started creating a simple 2D game for the web using P5.js. 
+ */
+// Global variable to store the current game state
+let gameState = "splash";
+let player; // Global variable to store the player object
+
+function setup() {
+  createCanvas(600, 400);
+  player = new Player(width / 2, height * 4 / 5); // Instantiate player object
+}
+
+function draw() {
+  // Switch statement to determine which screen to display based on the current game state
+  switch (gameState) {
+    case "splash":
+      splash(); // Display the splash screen
+      break;
+    case "play":
+      play(); // Display the play screen
+      break;
+    case "gameOver":
+      gameOver(); // Display the game over screen
+      break;
+    default:
+      console.log("No match found - check your mousePressed() function!");
+  }
+
+  player.display(); // Display player sprite on canvas
+  player.move(); // Move player based on user input
+}
+
+// Function to display the splash screen
+function splash() {
+  background(200); // Light gray background
+  textAlign(CENTER);
+  textSize(32);
+  fill(0); // Black text color
+  text("Splash Screen", width / 2, height / 2); // Display text in the center of the canvas
+}
+
+// Function to display the play screen
+function play() {
+  background(0, 200, 0); // Green background
+  textAlign(CENTER);
+  textSize(32);
+  fill(0); // Black text color
+  text("Play Screen", width / 2, height / 2); // Display text in the center of the canvas
+
+  // Mouse following
+  player.x = mouseX;
+  player.y = mouseY;
+}
+
+// Function to display the game over screen
+function gameOver() {
+  background(0); // Black background
+  textAlign(CENTER);
+  textSize(32);
+  fill(255, 0, 0); // Red text color
+  text("Game Over Screen", width / 2, height / 2); // Display text in the center of the canvas
+}
+
+// Function to handle key presses and change the player's state
+function keyPressed() {
+  switch (keyCode) {
+    case UP_ARROW:
+      // Accelerate upward
+      player.thrust();
+      break;
+    case DOWN_ARROW:
+      // Brake
+      player.brake();
+      break;
+    case LEFT_ARROW:
+      // Turn left
+      player.angle -= 0.02;
+      break;
+    case RIGHT_ARROW:
+      // Turn right
+      player.angle += 0.02;
+      break;
+    default:
+      console.log("Use the arrow keys to move");
+  }
+}
