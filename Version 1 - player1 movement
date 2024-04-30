@@ -6,9 +6,11 @@
  */
 // Global variable to store the current game state
 let gameState = "splash";
+let player; // Global variable to store the player object
 
 function setup() {
   createCanvas(600, 400);
+  player = new Player(width / 2, height * 4 / 5); // Instantiate player object
 }
 
 function draw() {
@@ -26,6 +28,9 @@ function draw() {
     default:
       console.log("No match found - check your mousePressed() function!");
   }
+
+  player.display(); // Display player sprite on canvas
+  player.move(); // Move player based on user input
 }
 
 // Function to display the splash screen
@@ -44,6 +49,10 @@ function play() {
   textSize(32);
   fill(0); // Black text color
   text("Play Screen", width / 2, height / 2); // Display text in the center of the canvas
+
+  // Mouse following
+  player.x = mouseX;
+  player.y = mouseY;
 }
 
 // Function to display the game over screen
@@ -55,14 +64,26 @@ function gameOver() {
   text("Game Over Screen", width / 2, height / 2); // Display text in the center of the canvas
 }
 
-// Function to handle mouse clicks and change the game state
-function mousePressed() {
-  // Change the game state based on the current state
-  if (gameState == "splash") {
-    gameState = "play";
-  } else if (gameState == "play") {
-    gameState = "gameOver";
-  } else if (gameState == "gameOver") {
-    gameState = "splash";
+// Function to handle key presses and change the player's state
+function keyPressed() {
+  switch (keyCode) {
+    case UP_ARROW:
+      // Accelerate upward
+      player.thrust();
+      break;
+    case DOWN_ARROW:
+      // Brake
+      player.brake();
+      break;
+    case LEFT_ARROW:
+      // Turn left
+      player.angle -= 0.02;
+      break;
+    case RIGHT_ARROW:
+      // Turn right
+      player.angle += 0.02;
+      break;
+    default:
+      console.log("Use the arrow keys to move");
   }
 }

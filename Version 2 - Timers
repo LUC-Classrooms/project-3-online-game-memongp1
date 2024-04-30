@@ -1,0 +1,100 @@
+/**
+ * Project 3 versions 0-4 - 2D Web Game
+ * Name:Patrick Memong
+ * 
+ * Use this template to get started creating a simple 2D game for the web using P5.js. 
+ */
+// Global variable to store the current game state
+let gameState = "splash";
+let player;
+let gameTimer; // Global variable for the timer
+
+function setup() {
+  createCanvas(600, 400);
+  player = new Player(width / 2, height * 4 / 5);
+  gameTimer = new Timer(5000); // 5 second timer
+}
+
+function draw() {
+  switch (gameState) {
+    case "splash":
+      splash();
+      break;
+    case "play":
+      play();
+      break;
+    case "gameOver":
+      gameOver();
+      break;
+    default:
+      console.log("No match found - check your mousePressed() function!");
+  }
+
+  player.display();
+  player.move();
+}
+
+function splash() {
+  background(200);
+  textAlign(CENTER);
+  textSize(32);
+  fill(0);
+  text("Splash Screen", width / 2, height / 2);
+}
+
+function play() {
+  background(0, 200, 0);
+  textAlign(CENTER);
+  textSize(32);
+  fill(0);
+  text("Play Screen", width / 2, height / 2);
+
+  // Mouse following
+  player.x = mouseX;
+  player.y = mouseY;
+
+  // Check if timer is finished
+  if (gameTimer.isFinished()) {
+    gameState = "gameOver";
+  }
+
+  // Display elapsed time
+  textAlign(LEFT);
+  text("Elapsed time: " + gameTimer.elapsedTime, 40, 100);
+}
+
+function gameOver() {
+  background(0);
+  textAlign(CENTER);
+  textSize(32);
+  fill(255, 0, 0);
+  text("Game Over Screen", width / 2, height / 2);
+}
+
+function keyPressed() {
+  switch (keyCode) {
+    case UP_ARROW:
+      player.thrust();
+      break;
+    case DOWN_ARROW:
+      player.brake();
+      break;
+    case LEFT_ARROW:
+      player.angle -= 0.02;
+      break;
+    case RIGHT_ARROW:
+      player.angle += 0.02;
+      break;
+    default:
+      console.log("Use the arrow keys to move");
+  }
+}
+
+function mousePressed() {
+  if (gameState == "splash") {
+    gameState = "play";
+    gameTimer.start(); // Start the timer
+  } /* else if (gameState == "play") {
+    gameState = "gameOver";
+  } */
+}

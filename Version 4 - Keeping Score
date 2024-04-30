@@ -1,0 +1,49 @@
+// Add a global variable to keep track of points scored by the player
+var score = 0; // keep track of points (starting at 0)
+
+function setup() {
+  createCanvas(600, 400);
+  // other setup code...
+}
+
+function draw() {
+  // other draw code...
+
+  // Display the score on the play screen
+  textAlign(LEFT);
+  text("Score: " + score, 20, 40);
+}
+
+function play() {
+  // other play code...
+
+  // Increment score if player intersects with a present
+  if (d < 50) {
+    presents.splice(i, 1);
+    score++; // Add 1 point to the score
+  }
+
+  // Decrement score if a present passes below the canvas
+  if (presents[i].y > height) {
+    presents.splice(i, 1); // Remove present from array
+    score--; // Subtract 1 point from the score
+  }
+}
+
+function mousePressed() {
+  // other mousePressed code...
+
+  if (gameState == "splash") {
+    gameState = "play";
+    timer.start(); // Start the game timer
+    dropTimer.start();
+    score = 0; // Reset the score to 0 at the start of the game
+  }
+}
+
+function gameOver() {
+  // other gameOver code...
+
+  // Display the final score on the Game Over screen
+  text("Your final score: " + score, width/2, height * 2/3);
+}

@@ -1,0 +1,118 @@
+ Project 3 versions 0-4 - 2D Web Game
+ * Name:Patrick Memong
+ * 
+ * Use this template to get started creating a simple 2D game for the web using P5.js. 
+ */
+let gameState = "splash";
+let player1;
+let gameTimer;
+let testBox;
+let dropTimer;
+let presents = new Array(0);
+
+function setup() {
+  createCanvas(600, 400);
+  player1 = new Player(width / 2, height * 4 / 5);
+  gameTimer = new Timer(5000);
+  testBox = new Box(width / 2, height / 3);
+  dropTimer = new Timer(1000); // 1 second drop timer
+}
+
+function draw() {
+  switch (gameState) {
+    case "splash":
+      splash();
+      break;
+    case "play":
+      play();
+      break;
+    case "gameOver":
+      gameOver();
+      break;
+    default:
+      console.log("No match found - check your mousePressed() function!");
+  }
+
+  player1.display();
+  player1.move();
+}
+
+function splash() {
+  background(200);
+  textAlign(CENTER);
+  textSize(32);
+  fill(0);
+  text("Splash Screen", width / 2, height / 2);
+  testBox.display(); // Display testBox on splash screen
+  testBox.spin(); // Rotate testBox
+}
+
+function play() {
+  background(0, 200, 0);
+  textAlign(CENTER);
+  textSize(32);
+  fill(0);
+  text("Play Screen", width / 2, height / 2);
+
+  player1.x = mouseX; // Mouse following
+
+  // Check if dropTimer is finished
+  if (dropTimer.isFinished()) {
+    let p = new Box(random(width), -40);
+    presents.push(p); // Add new present to array
+    dropTimer.start(); // Restart drop timer
+  }
+
+  // Manage presents array
+  for (let i = 0; i < presents.length; i++) {
+    presents[i].display(); // Display present
+    presents[i].move(); // Move present
+    presents[i].spin(); // Rotate present
+
+    // Check if present went below canvas
+    if (presents[i].y > height) {
+      presents.splice(i, 1); // Remove present from array
+    }
+
+    // Check for collision with player1
+    let d = dist(presents[i].x, presents[i].y, player1.x, player1.y);
+    if (d < 50) {
+      presents.splice(i, 1); // Remove present from array
+    }
+  }
+}
+
+function gameOver() {
+  background(0);
+  textAlign(CENTER);
+  textSize(32);
+  fill(255, 0, 0);
+  text("Game Over Screen", width / 2, height / 2);
+}
+
+function keyPressed() {
+  switch (keyCode) {
+    case UP_ARROW:
+      player1.thrust();
+      break;
+    case DOWN_ARROW:
+      player1.brake();
+      break;
+    case LEFT_ARROW:
+      player1.angle -= 0.02;
+      break;
+    case RIGHT_ARROW:
+      player1.angle += 0.02;
+      break;
+    default:
+      console.log("Use the arrow keys to move");
+  }
+}
+
+function mousePressed() {
+  if (gameState == "splash") {
+    gameState = "play";
+    gameTimer.start(); // Start game timer
+    dropTimer.start(); // Start drop timer
+  }
+}
